@@ -1,3 +1,21 @@
+var currentDate = new Date();
+var timeZoneOffsetInMinutes = currentDate.getTimezoneOffset();
+
+// Convert the offset to hours and minutes
+var hoursOffset = Math.floor(Math.abs(timeZoneOffsetInMinutes) / 60);
+var minutesOffset = Math.abs(timeZoneOffsetInMinutes) % 60;
+
+// Determine if the offset is positive or negative
+var sign = timeZoneOffsetInMinutes > 0 ? "-" : "+";
+
+// Output the timezone offset in the format ±HH:MM
+var timeZoneString =
+  "UTC" +
+  sign +
+  hoursOffset.toString().padStart(2, "0") +
+  ":" +
+  minutesOffset.toString().padStart(2, "0");
+
 // Function to handle message from content script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   // Check if the message contains email details
@@ -6,7 +24,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   let emailDetailsExtracted = extractEmailInfo(emailPopupContent);
 
   if (emailBody) {
-    document.getElementById("body").textContent = emailBody || "";
+    let ulElement = document.getElementById("body");
+
+    // Clear any existing content in the ul element
+    ulElement.innerHTML = "";
+
+    // Loop through emailBody array and create li elements
+    if (request.lastEmail) {
+      let liElement = document.createElement("li");
+      liElement.textContent = request.lastEmail;
+      ulElement.appendChild(liElement);
+    }
+    let liElement = document.createElement("li");
+    liElement.textContent = emailBody;
+    ulElement.appendChild(liElement);
   }
   if (emailDetailsExtracted) {
     // Update email details
@@ -23,6 +54,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         : "";
     document.getElementById("datetime").textContent =
       emailDetailsExtracted.dateTime || "";
+    document.getElementById("timezone").textContent = timeZoneString || "";
   }
 });
 
@@ -36,7 +68,16 @@ async function scrapeEmailDetails() {
 }
 function extractEmailDetails() {
   // Extract sender and sender email from body
+  // Select the element
   let emailBodyElement = document.querySelector("div.adn.ads div.ii.gt");
+  let emailBodyElements = document.querySelectorAll("div.ads .g6");
+  let lastEmail = null;
+  if (emailBodyElements.length > 0) {
+    // Get the last one or two elements from the collection
+    lastEmail = Array.from(emailBodyElements).slice(-1);
+    lastEmail = lastEmail[0].innerText.trim();
+    // Iterate over the last one or two elements
+  }
 
   let element = document.querySelector(".ajz");
   if (element) {
@@ -53,7 +94,11 @@ function extractEmailDetails() {
 
   // Send extracted details to the extension
 
-  chrome.runtime.sendMessage({ emailBody, emailPopupContent });
+  chrome.runtime.sendMessage({
+    emailBody,
+    emailPopupContent,
+    lastEmail,
+  });
 }
 function extractEmailInfo(emailString) {
   // Extract sender name and email
@@ -74,26 +119,24 @@ function extractEmailInfo(emailString) {
   }
 
   // Extract recipients
-  var recipientMatches = emailString.match(
-    /to:\s*([^<]+)\s*(?:<([^>]+)>|,|$)/gi
-  );
+  var recipientMatches = emailString.match(/to:(.*?)(?=date:)/gis);
 
   var emailAddresses = [];
 
   if (recipientMatches) {
     recipientMatches.forEach(function (match) {
       var emailsInMatch = match.match(
-        /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g
+        /(?:\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b)|(?:<([^>]+)>)/g
       );
+
       if (emailsInMatch) {
         emailsInMatch.forEach(function (email) {
-          emailAddresses.push(email);
+          var cleanedEmail = email.replace(/<|>/g, "");
+          emailAddresses.push(cleanedEmail);
         });
       }
     });
   }
-
-  alert(emailAddresses);
 
   // Extract datetime
   var dateTimeMatch = emailString.match(/date:\s*([^]+?)(?=\s*subject:|$)/i);

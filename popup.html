@@ -5,29 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Email Details</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-
-    .email-details {
-      max-width: 600px;
-      margin: 0 auto;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 20px;
-    }
-
-    .email-details h2 {
-      margin-top: 0;
-    }
-
-    .email-details p {
-      margin-top: 10px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -38,12 +16,15 @@
     <p><strong>Sender Email:</strong> <span id="senderEmail"></span></p>
     <p><strong>Recipients:</strong> <span id="recipients"></span></p>
     <p><strong>Date and Time:</strong> <span id="datetime"></span></p>
+    <p><strong>Time zone:</strong> <span id="timezone"></span></p>
     <p><strong>Body:</strong></p>
-    <div id="body"></div>
+    <ol id="body">
+    </ol>
+
   </div>
 
   <script src="popup.js"></script>
-  <script src="popup_pop.js"></script>
+
 </body>
 
 </html>
