@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      border: none;
+    }
+
+    body {
+      color: black;
+      background-color: white;
+      border-radius: 10px;
+      padding: 5px;
+    }
+
+    .center {
+      width: 500px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      overflow: auto;
+    }
+
+    button {
+      padding: 4px;
+      border-radius: 4px;
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
+      background-color: black;
+    }
+
+    button:hover {
+      background-color: gray;
+      color: black;
+    }
+
+    li {
+      font-size: 20px;
+      color: black;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="center">
+    <ul id="emailList"></ul>
+    <script src="popup.js"></script>
+  </div>
+</body>
+
+</html>
