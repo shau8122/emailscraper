@@ -4,54 +4,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Email Details</title>
   <style>
-    * {
-      border: none;
-    }
-
     body {
-      color: black;
-      background-color: white;
-      border-radius: 10px;
-      padding: 5px;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
     }
 
-    .center {
-      width: 500px;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-      overflow: auto;
+    .email-details {
+      max-width: 600px;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 20px;
     }
 
-    button {
-      padding: 4px;
-      border-radius: 4px;
-      font-size: 20px;
-      color: white;
-      cursor: pointer;
-      background-color: black;
+    .email-details h2 {
+      margin-top: 0;
     }
 
-    button:hover {
-      background-color: gray;
-      color: black;
-    }
-
-    li {
-      font-size: 20px;
-      color: black;
+    .email-details p {
+      margin-top: 10px;
     }
   </style>
 </head>
 
 <body>
-  <div class="center">
-    <ul id="emailList"></ul>
-    <script src="popup.js"></script>
+  <div class="email-details">
+    <h2>Email Details</h2>
+    <p><strong>Subject:</strong> <span id="subject"></span></p>
+    <p><strong>Sender Name:</strong> <span id="senderName"></span></p>
+    <p><strong>Sender Email:</strong> <span id="senderEmail"></span></p>
+    <p><strong>Recipients:</strong> <span id="recipients"></span></p>
+    <p><strong>Date and Time:</strong> <span id="datetime"></span></p>
+    <p><strong>Body:</strong></p>
+    <div id="body"></div>
   </div>
+
+  <script src="popup.js"></script>
+  <script src="popup_pop.js"></script>
 </body>
 
 </html>
